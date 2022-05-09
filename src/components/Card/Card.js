@@ -8,16 +8,19 @@ function Card(){
 
     const [randomImage, setRandomImage] = useState(); 
     const [cardNumber, setCardNumber] = useState('################');
-    const [cardMaintainerName, setcardMaintainerName] = useState('Your name');
+    const [cardMaintainerName, setcardMaintainerName] = useState('Your Name');
     const [cardExpiresAt, setcardExpiresAt] = useState('MM/YY');
 
     const Container = styled.div`
         position: relative;
         width: 35rem;
         height: 20rem;
-        border-radius .5rem;
+        margin-top: 10rem;
         box-shadow: 5px 5px 10px rgba(0,0,0,1);
         background-image: url('${randomImage}');
+        border-radius .5rem;
+        overflow: hidden;
+        z-index: 1;
     `;
     
     const VisaLogo = styled.div`
@@ -75,16 +78,16 @@ function Card(){
         background-color: rgba(0,0,0,.5);
     `;
 
-    const CardMaintainerName = styled.p`
+    const CardInformation = styled.p`
         font-family: monospace;
         font-size: 1rem;
     `;
-
-    const CardExpiresAt = styled.p`
-        font-family: monospace;
-        font-size: 1rem;
-    `;
-
+    
+    useEffect(() => {
+       fetchImage();
+       separateCardNumber();
+    }, []);
+    
     const fetchImage = async () => {
             const resolve = await fetch(imageUrl);
             const blobImage = await resolve.blob();
@@ -97,10 +100,6 @@ function Card(){
         setCardNumber(separatedCardNumber);
     }
 
-    useEffect(() => {
-       fetchImage();
-       separateCardNumber();
-    }, []);
 
     return(
         <Container>
@@ -112,12 +111,12 @@ function Card(){
                 </CardNumber>
             </CardNumberWrapper>
             <CardInformationWraper>
-                <CardMaintainerName>
-                    {cardMaintainerName}
-                </CardMaintainerName>
-                <CardExpiresAt>
+                <CardInformation>
+                    Card Holder: {cardMaintainerName}
+                </CardInformation>
+                <CardInformation>
                     Card Expires: {cardExpiresAt}
-                </CardExpiresAt>
+                </CardInformation>
             </CardInformationWraper>
         </Container>
     )
