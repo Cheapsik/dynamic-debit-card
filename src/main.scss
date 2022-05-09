@@ -1,0 +1,23 @@
+$background-color: #0d1117;
+$accent-color: #36e2b2;
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    font: 1em sans-serif;
+}
+
+body{
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    background-color: $background-color;
+    color: white;
+}
