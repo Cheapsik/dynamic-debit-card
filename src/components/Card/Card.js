@@ -76,8 +76,11 @@ const CardInformation = styled.p`
 const imageUrl = 'https://picsum.photos/600/350';
 const visaImg =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png';
+const debitCardRegex =
+  /(^4[0-9]{12}(?:[0-9]{3})?$)|(^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$)|(3[47][0-9]{13})|(^3(?:0[0-5]|[68][0-9])[0-9]{11}$)|(^6(?:011|5[0-9]{2})[0-9]{12}$)|(^(?:2131|1800|35\d{3})\d{11}$)/;
 
-function Card({ ...props }) {
+function Card({ isValidated, ...props }) {
+  let isValid = true;
   const [randomImage, setRandomImage] = useState();
   const [cardNumber, setCardNumber] = useState('');
 
@@ -99,12 +102,17 @@ function Card({ ...props }) {
   };
 
   const separateCardNumber = cardNumber => {
-    if (cardNumber.length > 16) return;
+    isValid = debitCardRegex.test(cardNumber) && cardNumber.length > 1;
+    if (cardNumber.length > 16) {
+      isValid = false;
+      return;
+    }
     const separatedCardNumber = cardNumber
       .replace(/^/g, '')
       .replace(/(.{4})/g, '$1 ')
       .trim();
     setCardNumber(separatedCardNumber);
+    isValidated(isValid);
   };
 
   return (

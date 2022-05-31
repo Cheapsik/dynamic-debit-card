@@ -53,9 +53,15 @@ const Label = styled.label`
   font-size: 1rem;
 `;
 
-export default function CardForm({ dataFromForm }) {
+export default function CardForm({ dataFromForm, validation }) {
   const id = useId();
   let cardData = {};
+
+  if (validation === undefined) {
+    validation = true;
+  } else {
+    validation = validation;
+  }
 
   const [cardNumber, setCardNumber] = useState('');
   const [cardHolder, setCardHolder] = useState('');
@@ -107,9 +113,11 @@ export default function CardForm({ dataFromForm }) {
         <Label>Card number</Label>
         <TextField
           key={`${id}-number`}
-          placeholder="1234 1234 1234 1234"
+          placeholder="XXXX XXXX XXXX XXXX"
           onChange={onChangeCardNumber}
           value={cardNumber}
+          error={!validation}
+          inputProps={{ maxLength: 16 }}
         />
       </InputHeader>
       <InputHeader>
@@ -120,6 +128,7 @@ export default function CardForm({ dataFromForm }) {
           placeholder="Your Name"
           onChange={onChangeCardHolder}
           value={cardHolder}
+          inputProps={{ maxLength: 20 }}
         />
       </InputHeader>
       <div className="expiration_wrapper">
