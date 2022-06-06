@@ -54,8 +54,11 @@ const Label = styled.label`
 `;
 
 export default function CardForm({ dataFromForm, validation }) {
-  const id = useId();
   let cardData = {};
+  const limit = {
+    carNumber: 16,
+    cardHolder: 24,
+  };
 
   if (validation === undefined) {
     validation = true;
@@ -86,11 +89,18 @@ export default function CardForm({ dataFromForm, validation }) {
   };
 
   const onChangeCardNumber = e => {
-    setCardNumber(e.target.value);
+    const onlyNumbersRegex = /^[0-9]/;
+    if (onlyNumbersRegex.test(e.target.value)) {
+      setCardNumber(e.target.value.slice(0, limit.carNumber));
+    }
   };
 
   const onChangeCardHolder = e => {
-    setCardHolder(e.target.value);
+    const onlyLettersRegex = /^[a-zA-Z\s]*$/;
+    if (onlyLettersRegex.test(e.target.value)) {
+      setCardHolder(e.target.value.slice(0, limit.cardHolder));
+      return;
+    }
   };
 
   const onDataChange = e => {
@@ -112,23 +122,22 @@ export default function CardForm({ dataFromForm, validation }) {
       <InputHeader>
         <Label>Card number</Label>
         <TextField
-          key={`${id}-number`}
           placeholder="XXXX XXXX XXXX XXXX"
           onChange={onChangeCardNumber}
           value={cardNumber}
           error={!validation}
-          inputProps={{ maxLength: 16 }}
+          inputProps={{ min: 0, type: 'number' }}
+          data-card="card-number"
         />
       </InputHeader>
       <InputHeader>
         <Label>Card holder</Label>
         <TextField
           hiddenLabel
-          key={`${id}-name`}
           placeholder="Your Name"
           onChange={onChangeCardHolder}
           value={cardHolder}
-          inputProps={{ maxLength: 20 }}
+          data-card="card-holder"
         />
       </InputHeader>
       <div className="expiration_wrapper">
@@ -139,6 +148,7 @@ export default function CardForm({ dataFromForm, validation }) {
             value={expirationDate.monthExpiration}
             defaultValue="January"
             onChange={onDataChange}
+            data-card="expiration-month"
           >
             {months.map(value => {
               return (
@@ -156,6 +166,7 @@ export default function CardForm({ dataFromForm, validation }) {
             value={expirationDate.dayExpiration}
             defaultValue="1"
             onChange={onDataChange}
+            data-card="expiration-day"
           >
             {days.map(value => {
               return (
